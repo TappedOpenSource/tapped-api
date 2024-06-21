@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { queryUsers } from "../data/search";
 import { GuardedUserModel } from "../types/user_model";
+import { transformUser } from "../utils/guarded_user";
 
 export async function searchPerformersController(
   request: FastifyRequest,
@@ -19,17 +20,7 @@ export async function searchPerformersController(
 
     // transform UserModel to something to send to client
     const performers: GuardedUserModel[] = hits.map((user) => {
-      return {
-        id: user.id,
-        username: user.username,
-        displayName: user.artistName,
-        bio: user.bio,
-        profilePicture: user.profilePicture,
-        location: user.location,
-        socialFollowing: user.socialFollowing,
-        genres: user.performerInfo?.genres ?? [],
-        ...user.performerInfo,
-      };
+      return transformUser(user);
     });
 
     reply.send({

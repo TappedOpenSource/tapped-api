@@ -2,10 +2,11 @@ import { Timestamp } from "firebase-admin/firestore";
 import { ApiKey } from "../types/api_key";
 import { db } from "../utils/firebase";
 import { generateApiKey } from "generate-api-key";
+import { UserModel } from "../types/user_model";
 
 const apiKeysRef = db.collection("apiKeys");
+const usersRef = db.collection("users");
 
-// TODO
 export async function createApiKey(userId: string, options?: {
     save: boolean;
 }): Promise<ApiKey> {
@@ -51,4 +52,13 @@ export async function getUserApiKeys(userId: string): Promise<ApiKey[]> {
 export async function saveUserApiKey(apiKey: ApiKey) {
   await apiKeysRef
     .add(apiKey);
+}
+
+export async function getUserById(userId: string): Promise<UserModel | null> {
+  const userDoc = await usersRef.doc(userId).get();
+  if (!userDoc.exists) {
+    return null;
+  }
+
+  return userDoc.data() as UserModel;
 }

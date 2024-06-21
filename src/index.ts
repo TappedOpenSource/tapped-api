@@ -52,17 +52,9 @@ async function createServer(): Promise<void> {
     handler: searchPerformersController
   });
 
-  fastify.get("/v1/performer", async function handler(request, reply) {
-    const { id, datasource } = request.query as { id: string, datasource: string | undefined };
-    request.log.info(`search performer id ${id} from ${datasource}`);
-
-    if (!id) {
-      request.log.error("id missing");
-      reply.code(400);
-      return { error: "id is required" };
-    }
-
-    return process.env;
+  fastify.get("/v1/performer", {
+    preHandler: requireApiKey,
+    handler: searchPerformersController
   });
 }
 
