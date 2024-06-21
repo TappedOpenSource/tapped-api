@@ -8,7 +8,7 @@ program.command("get-performer")
   .description("get a performer by id using different data sources")
   .argument("<string>", "the id of the performer")
   .option("-s, --separator <string>", "the datasource", "tapped")
-  .action((str, options) => {
+  .action((str: string, options) => {
     console.info({ str, options })
   });
 
@@ -17,7 +17,7 @@ program.command("search")
   .argument("<string>", "performer name")
   .option("--first", "display just the first substring")
   .option("-s, --separator <char>", "separator character", ",")
-  .action((str, options) => {
+  .action((str: string, options) => {
     console.info({ str, options })
   });
 
