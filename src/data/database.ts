@@ -10,7 +10,7 @@ const usersRef = db.collection("users");
 export async function createApiKey(userId: string, options?: {
     save: boolean;
 }): Promise<ApiKey> {
-  const key = generateApiKey({ method: "base62", prefix: "test_app" });
+  const key = generateApiKey({ method: "base62", prefix: "tapped" });
 
   if (typeof key !== "string") {
     throw new Error("failed to generate API key");
@@ -30,13 +30,13 @@ export async function createApiKey(userId: string, options?: {
 }
 
 export async function getUserFromApiKey(apiKey: string): Promise<string | null> {
-  const apiKeyQuery = await apiKeysRef.where("key", "==", apiKey).get();
-  if (apiKeyQuery.empty) {
+  const apiKeySnap = await apiKeysRef.doc(apiKey).get();
+  if (!apiKeySnap.exists) {
     return null;
   }
 
-  const apiKeyDoc = apiKeyQuery.docs[0];
-  return apiKeyDoc.get("userId") ?? null;
+  const apiKeyDoc = apiKeySnap.data() as ApiKey;
+  return apiKeyDoc.userId;
 }
 
 export async function getUserApiKeys(userId: string): Promise<ApiKey[]> {
@@ -51,7 +51,8 @@ export async function getUserApiKeys(userId: string): Promise<ApiKey[]> {
 
 export async function saveUserApiKey(apiKey: ApiKey) {
   await apiKeysRef
-    .add(apiKey);
+    .doc(apiKey.key)
+    .set(apiKey);
 }
 
 export async function getUserById(userId: string): Promise<UserModel | null> {
@@ -60,5 +61,15 @@ export async function getUserById(userId: string): Promise<UserModel | null> {
     return null;
   }
 
+  return userDoc.data() as UserModel;
+}
+
+export async function getUserByUsername(username: string): Promise<UserModel | null> {
+  const userQuery = await usersRef.where("username", "==", username).get();
+  if (userQuery.empty) {
+    return null;
+  }
+
+  const userDoc = userQuery.docs[0];
   return userDoc.data() as UserModel;
 }

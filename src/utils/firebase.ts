@@ -1,4 +1,3 @@
-
 /* eslint @typescript-eslint/no-var-requires: 0 */
 import { configDotenv } from "dotenv";
 import { initializeApp, cert, applicationDefault } from "firebase-admin/app";
@@ -6,16 +5,16 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
 import { getStorage } from "firebase-admin/storage";
-
 configDotenv({
   path: ".env",
 });
 
 const production = process.env.NODE_ENV === "production";
 
+const credentialPath = process.env["GOOGLE_CREDENTIALS_PATH"] ?? "../crednetials.json";
 const credential = production
   ? applicationDefault()
-  : cert(require("../credentials.json"));
+  : cert(require(credentialPath));
 
 const app = initializeApp({
   projectId: "in-the-loop-306520",
