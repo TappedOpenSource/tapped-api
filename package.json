@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky",
     "build": "tsc",
-    "dev": "nodemon --watch 'src/**/*.ts' src/server.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' src/index.ts",
     "start": "node dist/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -21,10 +21,14 @@
   },
   "homepage": "https://github.com/TappedOpenSource/tapped-api#readme",
   "dependencies": {
+    "@fastify/rate-limit": "^9.1.0",
     "@google-cloud/storage": "^7.11.2",
+    "algoliasearch": "^4.23.3",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0",
-    "firebase-admin": "^12.2.0"
+    "firebase-admin": "^12.2.0",
+    "generate-api-key": "^1.0.2",
+    "pino": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
@@ -38,6 +42,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
     "typescript-eslint": "^7.3.1"
   }

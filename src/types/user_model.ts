@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-
-export type Option<T> = T | null;
+import { Option } from "./option";
 
 export type Location = {
   placeId: string;
@@ -79,7 +78,6 @@ export type UserModel = {
     occupations: string[];
     profilePicture: Option<string>;
     location: Option<Location>;
-    badgesCount: number;
     performerInfo: Option<PerformerInfo>;
     venueInfo: Option<VenueInfo>;
     bookerInfo: Option<BookerInfo>;
@@ -89,4 +87,17 @@ export type UserModel = {
     socialFollowing: SocialFollowing;
     stripeConnectedAccountId: Option<string>;
     stripeCustomerId: Option<string>;
+  };
+
+export type GuardedUserModel = {
+    id: string;
+    username: string;
+    displayName: string;
+    bio: string;
+    profilePicture: Option<string>;
+    location: Option<Location>;
+    socialFollowing: SocialFollowing;
+    pressKitUrl?: Option<string>;
+    genres: string[];
+    spotifyId?: Option<string>;
   };

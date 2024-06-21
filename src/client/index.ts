@@ -9,7 +9,7 @@ program.command("get-performer")
   .argument("<string>", "the id of the performer")
   .option("-s, --separator <string>", "the datasource", "tapped")
   .action((str, options) => {
-    console.log({ str, options })
+    console.info({ str, options })
   });
 
 program.command("search")
@@ -18,7 +18,14 @@ program.command("search")
   .option("--first", "display just the first substring")
   .option("-s, --separator <char>", "separator character", ",")
   .action((str, options) => {
-    console.log({ str, options })
+    console.info({ str, options })
+  });
+
+program.command("create-api-key")
+  .description("create a new API key")
+  .option("-s, --save", "save the API key")
+  .action((options) => {
+    console.info({ options })
   });
 
 program.parse();
