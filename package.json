@@ -1,0 +1,44 @@
+{
+  "name": "tapped-api",
+  "version": "1.0.0",
+  "description": "enterprise api for tapped ai",
+  "scripts": {
+    "prepare": "husky",
+    "build": "tsc",
+    "dev": "nodemon --watch 'src/**/*.ts' src/server.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TappedOpenSource/tapped-api.git"
+  },
+  "author": "Johannes Naylor <johannes@tapped.ai>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TappedOpenSource/tapped-api/issues"
+  },
+  "homepage": "https://github.com/TappedOpenSource/tapped-api#readme",
+  "dependencies": {
+    "@google-cloud/storage": "^7.11.2",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.0",
+    "firebase-admin": "^12.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@types/node": "^20.14.7",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-security": "^2.1.1",
+    "eslint-plugin-sonarjs": "^0.24.0",
+    "globals": "^15.6.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "nodemon": "^3.1.4",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.3.1"
+  }
+}
