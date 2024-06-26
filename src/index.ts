@@ -39,10 +39,10 @@ async function createServer(): Promise<void> {
           url: "http://localhost:3000",
           description: "Development server",
         },
-      ],
-      tags: [
-        { name: "user", description: "User related end-points" },
-        { name: "code", description: "Code related end-points" },
+        {
+          url: "https://api.tapped.ai",
+          description: "Production server",
+        },
       ],
       components: {
         securitySchemes: {
@@ -120,11 +120,103 @@ async function createServer(): Promise<void> {
   fastify.get("/v1/performer/:performerId", {
     preHandler: requireApiKey,
     handler: getUserController,
+    schema: {
+      response: {
+        200: {
+          type: "object",
+          description: "Successful response",
+          properties: {
+            id: { type: "string" },
+            username: { type: "string" },
+            displayName: { type: "string" },
+            bio: { type: "string" },
+            profilePicture: { type: "string" },
+            location: {
+              type: "object",
+              properties: {
+                lat: { type: "number" },
+                lng: { type: "number" },
+              },
+              socialFollowing: {
+                type: "object",
+                properties: {
+                  youtubeChannelId: { type: "string" },
+                  tiktokHandle: { type: "string" },
+                  tiktokFollowers: { type: "number" },
+                  instagramHandle: { type: "string" },
+                  instagramFollowers: { type: "number" },
+                  twitterHandle: { type: "string" },
+                  twitterFollowers: { type: "number" },
+                  facebookHandle: { type: "string" },
+                  facebookFollowers: { type: "number" },
+                  spotifyUrl: { type: "string" },
+                  soundcloudHandle: { type: "string" },
+                  soundcloudFollowers: { type: "number" },
+                  audiusHandle: { type: "string" },
+                  audiusFollowers: { type: "number" },
+                  twitchHandle: { type: "string" },
+                  twitchFollowers: { type: "number" },
+                },
+              },
+              pressKitUrl: { type: "string" },
+              genres: { type: "array", items: { type: "string" } },
+              spotifyId: { type: "string" },
+            },
+          },
+        },
+      },
+    },
   });
 
   fastify.get("/v1/performer/username/:username", {
     preHandler: requireApiKey,
     handler: getUsernameController,
+    schema: {
+      response: {
+        200: {
+          type: "object",
+          description: "Successful response",
+          properties: {
+            id: { type: "string" },
+            username: { type: "string" },
+            displayName: { type: "string" },
+            bio: { type: "string" },
+            profilePicture: { type: "string" },
+            location: {
+              type: "object",
+              properties: {
+                lat: { type: "number" },
+                lng: { type: "number" },
+              },
+              socialFollowing: {
+                type: "object",
+                properties: {
+                  youtubeChannelId: { type: "string" },
+                  tiktokHandle: { type: "string" },
+                  tiktokFollowers: { type: "number" },
+                  instagramHandle: { type: "string" },
+                  instagramFollowers: { type: "number" },
+                  twitterHandle: { type: "string" },
+                  twitterFollowers: { type: "number" },
+                  facebookHandle: { type: "string" },
+                  facebookFollowers: { type: "number" },
+                  spotifyUrl: { type: "string" },
+                  soundcloudHandle: { type: "string" },
+                  soundcloudFollowers: { type: "number" },
+                  audiusHandle: { type: "string" },
+                  audiusFollowers: { type: "number" },
+                  twitchHandle: { type: "string" },
+                  twitchFollowers: { type: "number" },
+                },
+              },
+              pressKitUrl: { type: "string" },
+              genres: { type: "array", items: { type: "string" } },
+              spotifyId: { type: "string" },
+            },
+          },
+        },
+      },
+    },
   });
 
   fastify.get("/v1/location/:lat-:lng", {
