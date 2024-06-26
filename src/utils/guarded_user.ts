@@ -1,6 +1,6 @@
-import { GuardedUserModel, UserModel } from "../types/user_model";
+import { GuardedPerformer, UserModel } from "../types/user_model";
 
-export function transformUser(user: UserModel): GuardedUserModel {
+export function transformUser(user: UserModel): GuardedPerformer {
   return {
     id: user.id,
     username: user.username,

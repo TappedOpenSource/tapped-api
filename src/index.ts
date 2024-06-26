@@ -110,7 +110,7 @@ async function createServer(): Promise<void> {
   );
 
   fastify.addSchema({
-    $id: "guardedUser",
+    $id: "performerSchema",
     type: "object",
     properties: {
       id: { type: "string" },
@@ -152,6 +152,35 @@ async function createServer(): Promise<void> {
     },
   });
 
+  fastify.addSchema({
+    $id: "venueSchema",
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      username: { type: "string" },
+      displayName: { type: "string" },
+      bio: { type: "string" },
+      profilePicture: { type: "string" },
+      location: {
+        type: "object",
+        properties: {
+          lat: { type: "number" },
+          lng: { type: "number" },
+        },
+        genres: { type: "array", items: { type: "string" } },
+      },
+      bookingEmail: { type: "string" },
+      capacity: { type: "number" },
+      idealPerformerProfile: { type: "string" },
+      productionInfo: { type: "string" },
+      frontOfHouse: { type: "string" },
+      monitors: { type: "string" },
+      microphones: { type: "string" },
+      lights: { type: "string" },
+      topPerformerIds: { type: "array", items: { type: "string" } },
+    },
+  });
+
   fastify.get("/", async function handler() {
     return { status: "ok" };
   });
@@ -177,7 +206,7 @@ async function createServer(): Promise<void> {
         200: {
           type: "object",
           description: "Successful response",
-          $ref: "guardedUser#",
+          $ref: "performerSchema#",
         },
       },
     },
@@ -191,7 +220,7 @@ async function createServer(): Promise<void> {
         200: {
           type: "object",
           description: "Successful response",
-          $ref: "guardedUser#",
+          $ref: "performerSchema#",
         },
       },
     },
@@ -206,10 +235,13 @@ async function createServer(): Promise<void> {
           type: "object",
           description: "Successful response",
           properties: {
-            venues: { type: "array", items: { type: "string" } },
+            venues: {
+              type: "array",
+              items: { type: "object", $ref: "venueSchema" },
+            },
             topPerformers: {
               type: "array",
-              items: { type: "object", $ref: "guardedUser#" },
+              items: { type: "object", $ref: "performerSchema#" },
             },
             genres: { type: "array", items: { type: "string" } },
           },
