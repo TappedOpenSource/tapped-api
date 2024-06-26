@@ -1,13 +1,19 @@
+/* eslint-disable indent */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { configDotenv } from "dotenv";
 configDotenv({
   path: ".env",
 });
 
+import rateLimit from "@fastify/rate-limit";
 import Fastify, { FastifyRequest } from "fastify";
-import { searchPerformersController } from "./domain/search_controller";
 import { requireApiKey } from "./domain/auth";
+import { getLocationController } from "./domain/location_controller";
+import { searchPerformersController } from "./domain/search_controller";
+import { getUserController } from "./domain/user_controller";
 import { tlogger } from "./utils/logger";
-import rateLimit from "@fastify/rate-limit"
 
 const port = parseInt(process.env.PORT || "3000");
 const host = process.env.ADDRESS || "0.0.0.0";
@@ -16,6 +22,59 @@ const fastify = Fastify({
 });
 
 async function createServer(): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  await fastify.register(require("@fastify/swagger"), {
+    openapi: {
+      openapi: "3.0.0",
+      info: {
+        title: "Tapped API swagger docs",
+        description: "Tapped API swagger docs",
+        version: "0.1.0",
+      },
+      servers: [
+        {
+          url: "http://localhost:3000",
+          description: "Development server",
+        },
+      ],
+      tags: [
+        { name: "user", description: "User related end-points" },
+        { name: "code", description: "Code related end-points" },
+      ],
+      components: {
+        securitySchemes: {
+          apiKey: {
+            type: "apiKey",
+            name: "apiKey",
+            in: "header",
+          },
+        },
+      },
+      externalDocs: {
+        url: "https://api.tapped.ai/docs",
+        description: "Find more info here",
+      },
+    },
+  });
+  await fastify.register(require("@fastify/swagger-ui"), {
+    routePrefix: "/swagger",
+    uiConfig: {
+      docExpansion: "full",
+      deepLinking: false,
+    },
+    staticCSP: true,
+    transformSpecificationClone: true,
+  });
+  await fastify.register(require("@scalar/fastify-api-reference"), {
+    routePrefix: "/docs",
+    configuration: {
+      spec: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        content: () => fastify.swagger(),
+      },
+    },
+  });
   await fastify.register(rateLimit, {
     global: true,
     max: 100,
@@ -25,15 +84,18 @@ async function createServer(): Promise<void> {
 
       return apiKey ? `rate-limit:${apiKey}` : "rate-limit:anonymous";
     },
-  })
-  fastify.setNotFoundHandler({
-    preHandler: fastify.rateLimit({
-      max: 8,
-      timeWindow: 500
-    }),
-  }, function (request, reply) {
-    reply.code(404).send({ hello: "world" })
   });
+  fastify.setNotFoundHandler(
+    {
+      preHandler: fastify.rateLimit({
+        max: 8,
+        timeWindow: 500,
+      }),
+    },
+    function (request, reply) {
+      reply.code(404).send({ hello: "world" });
+    },
+  );
 
   fastify.get("/", async function handler() {
     return { status: "ok" };
@@ -49,18 +111,27 @@ async function createServer(): Promise<void> {
 
   fastify.get("/v1/performer/search", {
     preHandler: requireApiKey,
-    handler: searchPerformersController
+    handler: searchPerformersController,
   });
 
   fastify.get("/v1/performer", {
     preHandler: requireApiKey,
-    handler: searchPerformersController
+    handler: getUserController,
+  });
+  fastify.get("v1/location", {
+    preHandler: requireApiKey,
+    handler: getLocationController,
   });
 }
 
 export async function startServer() {
   try {
     await createServer();
+    await fastify.ready();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    fastify.swagger();
     await fastify.listen({
       host,
       port,

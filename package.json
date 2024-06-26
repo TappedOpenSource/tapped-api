@@ -22,7 +22,10 @@
   "homepage": "https://github.com/TappedOpenSource/tapped-api#readme",
   "dependencies": {
     "@fastify/rate-limit": "^9.1.0",
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^4.0.0",
     "@google-cloud/storage": "^7.11.2",
+    "@scalar/fastify-api-reference": "^1.24.19",
     "algoliasearch": "^4.23.3",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0",
