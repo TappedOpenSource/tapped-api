@@ -12,7 +12,10 @@ import Fastify, { FastifyRequest } from "fastify";
 import { requireApiKey } from "./domain/auth";
 import { getLocationController } from "./domain/location_controller";
 import { searchPerformersController } from "./domain/search_controller";
-import { getUserController } from "./domain/user_controller";
+import {
+  getUserController,
+  getUsernameController,
+} from "./domain/user_controller";
 import { tlogger } from "./utils/logger";
 
 const port = parseInt(process.env.PORT || "3000");
@@ -114,11 +117,17 @@ async function createServer(): Promise<void> {
     handler: searchPerformersController,
   });
 
-  fastify.get("/v1/performer", {
+  fastify.get("/v1/performer/:performerId", {
     preHandler: requireApiKey,
     handler: getUserController,
   });
-  fastify.get("v1/location", {
+
+  fastify.get("/v1/performer/username/:username", {
+    preHandler: requireApiKey,
+    handler: getUsernameController,
+  });
+
+  fastify.get("/v1/location/:lat-:lng", {
     preHandler: requireApiKey,
     handler: getLocationController,
   });
