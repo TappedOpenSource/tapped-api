@@ -71,6 +71,15 @@ async function createServer(): Promise<void> {
   await fastify.register(require("@scalar/fastify-api-reference"), {
     routePrefix: "/docs",
     configuration: {
+      title: "Tapped API Reference",
+      metaData: {
+        title: "Tapped Ai API",
+        description: "Tapped API documentation",
+        ogDescription: "Tapped API documentation",
+        ogTitle: "Tapped Ai API",
+        ogImage: "https://tapped.ai/map-og.png",
+        twitterCard: "summary_large_image",
+      },
       spec: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -100,6 +109,49 @@ async function createServer(): Promise<void> {
     },
   );
 
+  fastify.addSchema({
+    $id: "guardedUser",
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      username: { type: "string" },
+      displayName: { type: "string" },
+      bio: { type: "string" },
+      profilePicture: { type: "string" },
+      location: {
+        type: "object",
+        properties: {
+          lat: { type: "number" },
+          lng: { type: "number" },
+        },
+        socialFollowing: {
+          type: "object",
+          properties: {
+            youtubeChannelId: { type: "string" },
+            tiktokHandle: { type: "string" },
+            tiktokFollowers: { type: "number" },
+            instagramHandle: { type: "string" },
+            instagramFollowers: { type: "number" },
+            twitterHandle: { type: "string" },
+            twitterFollowers: { type: "number" },
+            facebookHandle: { type: "string" },
+            facebookFollowers: { type: "number" },
+            spotifyUrl: { type: "string" },
+            soundcloudHandle: { type: "string" },
+            soundcloudFollowers: { type: "number" },
+            audiusHandle: { type: "string" },
+            audiusFollowers: { type: "number" },
+            twitchHandle: { type: "string" },
+            twitchFollowers: { type: "number" },
+          },
+        },
+        pressKitUrl: { type: "string" },
+        genres: { type: "array", items: { type: "string" } },
+        spotifyId: { type: "string" },
+      },
+    },
+  });
+
   fastify.get("/", async function handler() {
     return { status: "ok" };
   });
@@ -125,44 +177,7 @@ async function createServer(): Promise<void> {
         200: {
           type: "object",
           description: "Successful response",
-          properties: {
-            id: { type: "string" },
-            username: { type: "string" },
-            displayName: { type: "string" },
-            bio: { type: "string" },
-            profilePicture: { type: "string" },
-            location: {
-              type: "object",
-              properties: {
-                lat: { type: "number" },
-                lng: { type: "number" },
-              },
-              socialFollowing: {
-                type: "object",
-                properties: {
-                  youtubeChannelId: { type: "string" },
-                  tiktokHandle: { type: "string" },
-                  tiktokFollowers: { type: "number" },
-                  instagramHandle: { type: "string" },
-                  instagramFollowers: { type: "number" },
-                  twitterHandle: { type: "string" },
-                  twitterFollowers: { type: "number" },
-                  facebookHandle: { type: "string" },
-                  facebookFollowers: { type: "number" },
-                  spotifyUrl: { type: "string" },
-                  soundcloudHandle: { type: "string" },
-                  soundcloudFollowers: { type: "number" },
-                  audiusHandle: { type: "string" },
-                  audiusFollowers: { type: "number" },
-                  twitchHandle: { type: "string" },
-                  twitchFollowers: { type: "number" },
-                },
-              },
-              pressKitUrl: { type: "string" },
-              genres: { type: "array", items: { type: "string" } },
-              spotifyId: { type: "string" },
-            },
-          },
+          $ref: "guardedUser#",
         },
       },
     },
@@ -176,44 +191,7 @@ async function createServer(): Promise<void> {
         200: {
           type: "object",
           description: "Successful response",
-          properties: {
-            id: { type: "string" },
-            username: { type: "string" },
-            displayName: { type: "string" },
-            bio: { type: "string" },
-            profilePicture: { type: "string" },
-            location: {
-              type: "object",
-              properties: {
-                lat: { type: "number" },
-                lng: { type: "number" },
-              },
-              socialFollowing: {
-                type: "object",
-                properties: {
-                  youtubeChannelId: { type: "string" },
-                  tiktokHandle: { type: "string" },
-                  tiktokFollowers: { type: "number" },
-                  instagramHandle: { type: "string" },
-                  instagramFollowers: { type: "number" },
-                  twitterHandle: { type: "string" },
-                  twitterFollowers: { type: "number" },
-                  facebookHandle: { type: "string" },
-                  facebookFollowers: { type: "number" },
-                  spotifyUrl: { type: "string" },
-                  soundcloudHandle: { type: "string" },
-                  soundcloudFollowers: { type: "number" },
-                  audiusHandle: { type: "string" },
-                  audiusFollowers: { type: "number" },
-                  twitchHandle: { type: "string" },
-                  twitchFollowers: { type: "number" },
-                },
-              },
-              pressKitUrl: { type: "string" },
-              genres: { type: "array", items: { type: "string" } },
-              spotifyId: { type: "string" },
-            },
-          },
+          $ref: "guardedUser#",
         },
       },
     },
@@ -222,6 +200,22 @@ async function createServer(): Promise<void> {
   fastify.get("/v1/location/:lat-:lng", {
     preHandler: requireApiKey,
     handler: getLocationController,
+    schema: {
+      response: {
+        200: {
+          type: "object",
+          description: "Successful response",
+          properties: {
+            venues: { type: "array", items: { type: "string" } },
+            topPerformers: {
+              type: "array",
+              items: { type: "object", $ref: "guardedUser#" },
+            },
+            genres: { type: "array", items: { type: "string" } },
+          },
+        },
+      },
+    },
   });
 }
 
