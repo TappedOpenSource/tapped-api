@@ -146,7 +146,7 @@ async function createServer(): Promise<void> {
           },
         },
         category: {
-          type: "enum",
+          type: "string",
           enum: [
             "undiscovered",
             "emerging",
