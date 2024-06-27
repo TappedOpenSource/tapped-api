@@ -6,7 +6,7 @@ export function transformUser(user: UserModel): GuardedPerformer {
     username: user.username,
     displayName: user.artistName,
     bio: user.bio,
-    profilePicture: user.profilePicture,
+    profilePictureUrl: user.profilePicture,
     location: user.location,
     socialFollowing: user.socialFollowing,
     genres: user.performerInfo?.genres ?? [],

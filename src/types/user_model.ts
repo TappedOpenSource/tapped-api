@@ -100,7 +100,7 @@ export type GuardedPerformer = {
   username: string;
   displayName: string;
   bio: string;
-  profilePicture: Option<string>;
+  profilePictureUrl: Option<string>;
   location: Option<Location>;
   socialFollowing: SocialFollowing;
   pressKitUrl?: Option<string>;
@@ -113,7 +113,7 @@ export type GuardedVenue = {
   username: string;
   displayName: string;
   bio: string;
-  profilePicture: Option<string>;
+  profilePictureUrl: Option<string>;
   location: Option<Location>;
   genres: string[];
   bookingEmail?: Option<string>;

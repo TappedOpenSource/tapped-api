@@ -117,7 +117,7 @@ async function createServer(): Promise<void> {
       username: { type: "string" },
       displayName: { type: "string" },
       bio: { type: "string" },
-      profilePicture: { type: "string" },
+      profilePictureUrl: { type: "string" },
       location: {
         type: "object",
         properties: {
@@ -170,7 +170,7 @@ async function createServer(): Promise<void> {
       username: { type: "string" },
       displayName: { type: "string" },
       bio: { type: "string" },
-      profilePicture: { type: "string" },
+      profilePictureUrl: { type: "string" },
       location: {
         type: "object",
         properties: {
