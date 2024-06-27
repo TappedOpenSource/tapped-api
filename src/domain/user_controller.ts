@@ -1,6 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { getUserById, getUserByUsername } from "../data/database";
-import { transformUser } from "../utils/guarded_user";
+import {
+  getBookingsByRequesteeId,
+  getPerformerReviewsByUserId,
+  getUserById,
+  getUserByUsername,
+} from "../data/database";
+import {
+  transformBooking,
+  transformReview,
+  transformUser,
+} from "../utils/transformers";
 
 export async function getUserController(
   request: FastifyRequest,
@@ -23,7 +32,14 @@ export async function getUserController(
     return;
   }
 
-  const guardedUser = transformUser(user);
+  const bookings = await getBookingsByRequesteeId(user.id);
+  const reviews = await getPerformerReviewsByUserId(user.id);
+
+  const guardedUser = transformUser({
+    user,
+    bookings: bookings.map(transformBooking),
+    reviews: reviews.map(transformReview),
+  });
 
   reply.send({
     performer: guardedUser,
@@ -51,7 +67,14 @@ export async function getUsernameController(
     return;
   }
 
-  const guardedUser = transformUser(user);
+  const bookings = await getBookingsByRequesteeId(user.id);
+  const reviews = await getPerformerReviewsByUserId(user.id);
+
+  const guardedUser = transformUser({
+    user,
+    bookings: bookings.map(transformBooking),
+    reviews: reviews.map(transformReview),
+  });
 
   reply.send({
     performer: guardedUser,

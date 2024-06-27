@@ -1,7 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import {
+  getBookingsByRequesteeId,
+  getPerformerReviewsByUserId,
+} from "../data/database";
 import { queryUsers } from "../data/search";
 import { GuardedPerformer } from "../types/user_model";
-import { transformUser } from "../utils/guarded_user";
+import {
+  transformBooking,
+  transformReview,
+  transformUser,
+} from "../utils/transformers";
 
 export async function searchPerformersController(
   request: FastifyRequest,
@@ -19,9 +27,18 @@ export async function searchPerformersController(
     request.log.info(`found ${hits.length} performers`);
 
     // transform UserModel to something to send to client
-    const performers: GuardedPerformer[] = hits.map((user) => {
-      return transformUser(user);
-    });
+    const performers: GuardedPerformer[] = await Promise.all(
+      hits.map(async (user) => {
+        const bookings = await getBookingsByRequesteeId(user.id);
+        const reviews = await getPerformerReviewsByUserId(user.id);
+
+        return transformUser({
+          user,
+          bookings: bookings.map(transformBooking),
+          reviews: reviews.map(transformReview),
+        });
+      }),
+    );
 
     reply.send({
       performers,

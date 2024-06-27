@@ -1,5 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore";
+import { GuardedBooking } from "./booking";
 import { Option } from "./option";
+import { GuardedReview } from "./review";
 
 export type Location = {
   placeId: string;
@@ -31,18 +33,20 @@ export type BookerInfo = {
   reviewCount: number;
 };
 
+export type PerformerCategory =
+  | "undiscovered"
+  | "emerging"
+  | "hometownHero"
+  | "mainstream"
+  | "legendary";
+
 export type PerformerInfo = {
   pressKitUrl?: Option<string>;
   genres: string[];
   rating?: Option<number>;
   reviewCount: number;
   label: string;
-  category:
-    | "undiscovered"
-    | "emerging"
-    | "hometownHero"
-    | "mainstream"
-    | "legendary";
+  category: PerformerCategory;
   spotifyId?: Option<string>;
 };
 
@@ -106,6 +110,20 @@ export type GuardedPerformer = {
   pressKitUrl?: Option<string>;
   genres: string[];
   spotifyId?: Option<string>;
+  averageTicketRange: {
+    min: number;
+    max: number;
+  };
+  averageAttendance: number;
+  bookings: {
+    count: number;
+    items: GuardedBooking[];
+  };
+  reviews: {
+    count: number;
+    rating: number;
+    items: GuardedReview[];
+  };
 };
 
 export type GuardedVenue = {
@@ -125,4 +143,40 @@ export type GuardedVenue = {
   microphones?: Option<string>;
   lights?: Option<string>;
   topPerformerIds: string[];
+  bookings: {
+    count: number;
+    items: GuardedBooking[];
+  };
+  reviews: {
+    rating: number;
+    count: number;
+    items: GuardedReview[];
+  };
 };
+
+export const userAudienceSize = (user: UserModel): number =>
+  totalSocialFollowing(user.socialFollowing);
+
+export const totalSocialFollowing = (
+  socialFollowing: SocialFollowing | null,
+): number =>
+  (socialFollowing?.twitterFollowers ?? 0) +
+  (socialFollowing?.instagramFollowers ?? 0) +
+  (socialFollowing?.tiktokFollowers ?? 0);
+
+export function ticketPriceRange(
+  category: PerformerCategory,
+): [number, number] {
+  switch (category) {
+  case "undiscovered":
+    return [0, 1000];
+  case "emerging":
+    return [1000, 2000];
+  case "hometownHero":
+    return [2000, 4000];
+  case "mainstream":
+    return [4000, 7500];
+  case "legendary":
+    return [7500, 100000];
+  }
+}

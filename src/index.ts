@@ -110,6 +110,46 @@ async function createServer(): Promise<void> {
   );
 
   fastify.addSchema({
+    $id: "bookingSchema",
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      title: { type: "string" },
+      description: { type: "string" },
+      bookerId: { type: "string" },
+      performerId: { type: "string" },
+      rate: { type: "number" },
+      location: {
+        type: "object",
+        properties: {
+          lat: { type: "number" },
+          lng: { type: "number" },
+        },
+      },
+      startTime: { type: "string", format: "date-time" },
+      endTime: { type: "string", format: "date-time" },
+      flierUrl: { type: "string" },
+      eventUrl: { type: "string" },
+      referenceEventId: { type: "string" },
+    },
+  });
+
+  fastify.addSchema({
+    $id: "reviewSchema",
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      bookerId: { type: "string" },
+      performerId: { type: "string" },
+      bookingId: { type: "string" },
+      timestamp: { type: "string", format: "date-time" },
+      overallRating: { type: "number" },
+      overallReview: { type: "string" },
+      type: { type: "string", enum: ["performer", "booker"] },
+    },
+  });
+
+  fastify.addSchema({
     $id: "performerSchema",
     type: "object",
     properties: {
@@ -158,6 +198,24 @@ async function createServer(): Promise<void> {
         pressKitUrl: { type: "string" },
         genres: { type: "array", items: { type: "string" } },
         spotifyId: { type: "string" },
+        bookings: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              count: { type: "number" },
+              items: { type: "array", items: { $ref: "bookingSchema#" } },
+            },
+          },
+        },
+        reviews: {
+          type: "object",
+          properties: {
+            count: { type: "number" },
+            rating: { type: "number" },
+            items: { type: "array", items: { $ref: "reviewSchema#" } },
+          },
+        },
       },
     },
   });
@@ -188,6 +246,24 @@ async function createServer(): Promise<void> {
       microphones: { type: "string" },
       lights: { type: "string" },
       topPerformerIds: { type: "array", items: { type: "string" } },
+      bookings: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            count: { type: "number" },
+            items: { type: "array", items: { $ref: "bookingSchema#" } },
+          },
+        },
+      },
+      reviews: {
+        type: "object",
+        properties: {
+          count: { type: "number" },
+          rating: { type: "number" },
+          items: { type: "array", items: { $ref: "reviewSchema#" } },
+        },
+      },
     },
   });
 

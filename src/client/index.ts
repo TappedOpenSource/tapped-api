@@ -4,15 +4,24 @@ configDotenv({
 });
 
 import { program } from "commander";
-import { createApiKey, getUserById, getUserByUsername } from "../data/database";
+import {
+  createApiKey,
+  getBookingsByRequesteeId,
+  getPerformerReviewsByUserId,
+  getUserById,
+  getUserByUsername,
+} from "../data/database";
 import { queryUsers } from "../data/search";
-import { transformUser } from "../utils/guarded_user";
+import {
+  transformBooking,
+  transformReview,
+  transformUser,
+} from "../utils/transformers";
+
+program.name("tapped-api-client").description("CLI client for Tapped API");
 
 program
-  .name("tapped-api-client")
-  .description("CLI client for Tapped API");
-
-program.command("get-performer")
+  .command("get-performer")
   .description("get a performer by id using different data sources")
   .argument("<string>", "the id of the performer")
   .option("-s, --source <string>", "the datasource", "tapped")
@@ -25,10 +34,18 @@ program.command("get-performer")
       return;
     }
 
-    console.log(JSON.stringify(transformUser(user), null, 2));
+    const bookings = await getBookingsByRequesteeId(user.id);
+    const reviews = await getPerformerReviewsByUserId(user.id);
+    const guardedUser = transformUser({
+      user,
+      bookings: bookings.map(transformBooking),
+      reviews: reviews.map(transformReview),
+    });
+    console.log(JSON.stringify(guardedUser));
   });
 
-program.command("search")
+program
+  .command("search")
   .description("search for a performer by name or genre")
   .argument("<string>", "performer name")
   .action(async (str: string) => {
@@ -36,12 +53,25 @@ program.command("search")
       hitsPerPage: 10,
     });
 
-    const users = hits.map((hit) => transformUser(hit));
+    const users = await Promise.all(
+      hits.map(async (hit) => {
+        const bookings = await getBookingsByRequesteeId(hit.id);
+        const reviews = await getPerformerReviewsByUserId(hit.id);
+        const guardedUser = transformUser({
+          user: hit,
+          bookings: bookings.map(transformBooking),
+          reviews: reviews.map(transformReview),
+        });
+
+        return guardedUser;
+      }),
+    );
 
     console.log(JSON.stringify({ users }, null, 2));
   });
 
-program.command("create-api-key")
+program
+  .command("create-api-key")
   .description("create a new API key")
   .option("-s, --save <username>", "save the API key for a username")
   .action(async (options) => {
