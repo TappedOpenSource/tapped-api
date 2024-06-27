@@ -1,6 +1,3 @@
-/* eslint-disable indent */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable quotes */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { configDotenv } from "dotenv";
 configDotenv({
