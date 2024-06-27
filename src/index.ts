@@ -92,7 +92,7 @@ async function createServer(): Promise<void> {
     max: 100,
     timeWindow: "1 minute",
     keyGenerator: async (req: FastifyRequest) => {
-      const apiKey = req.headers["x-api-key"];
+      const apiKey = req.headers["tapped-api-key"];
 
       return apiKey ? `rate-limit:${apiKey}` : "rate-limit:anonymous";
     },
@@ -181,6 +181,14 @@ async function createServer(): Promise<void> {
     },
   });
 
+  const headersSchema = {
+    type: "object",
+    properties: {
+      "tapped-api-key": { type: "string" },
+    },
+    required: ["tapped-api-key"],
+  };
+
   fastify.get("/", async function handler() {
     return { status: "ok" };
   });
@@ -202,6 +210,7 @@ async function createServer(): Promise<void> {
     preHandler: requireApiKey,
     handler: getUserController,
     schema: {
+      headers: headersSchema,
       response: {
         200: {
           type: "object",
@@ -216,6 +225,7 @@ async function createServer(): Promise<void> {
     preHandler: requireApiKey,
     handler: getUsernameController,
     schema: {
+      headers: headersSchema,
       response: {
         200: {
           type: "object",
@@ -230,6 +240,7 @@ async function createServer(): Promise<void> {
     preHandler: requireApiKey,
     handler: getLocationController,
     schema: {
+      headers: headersSchema,
       response: {
         200: {
           type: "object",

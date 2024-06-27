@@ -12,7 +12,7 @@ export async function requireApiKey(
   reply: FastifyReply,
 ) {
   try {
-    const apiKey = request.headers["x-api-key"];
+    const apiKey = request.headers["tapped-api-key"];
     if (!apiKey) {
       request.log.error("missing API key");
       throw new Error("missing API key");
