@@ -37,6 +37,12 @@ export type PerformerInfo = {
   rating?: Option<number>;
   reviewCount: number;
   label: string;
+  category:
+    | "undiscovered"
+    | "emerging"
+    | "hometownHero"
+    | "mainstream"
+    | "legendary";
   spotifyId?: Option<string>;
 };
 

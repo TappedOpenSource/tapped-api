@@ -145,6 +145,16 @@ async function createServer(): Promise<void> {
             twitchFollowers: { type: "number" },
           },
         },
+        category: {
+          type: "enum",
+          enum: [
+            "undiscovered",
+            "emerging",
+            "hometownHero",
+            "mainstream",
+            "legendary",
+          ],
+        },
         pressKitUrl: { type: "string" },
         genres: { type: "array", items: { type: "string" } },
         spotifyId: { type: "string" },
