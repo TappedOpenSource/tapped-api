@@ -1,9 +1,11 @@
+import { Timestamp } from "firebase-admin/firestore";
+
 export type Review = {
   id: string;
   bookerId: string;
   performerId: string;
   bookingId: string;
-  timestamp: Date;
+  timestamp: Timestamp;
   overallRating: number;
   overallReview: string;
   type: "performer" | "booker";

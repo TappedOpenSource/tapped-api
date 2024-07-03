@@ -1,5 +1,6 @@
 import { Option } from "./option";
 import { Location } from "./user_model";
+import { Timestamp } from "firebase-admin/firestore";
 
 export type Booking = {
   id: string;
@@ -11,8 +12,8 @@ export type Booking = {
   status: "pending" | "confirmed" | "canceled";
   rate: number;
   location: Location;
-  startTime: Date;
-  endTime: Date;
+  startTime: Timestamp;
+  endTime: Timestamp;
   timestamp: Date;
   flierUrl: Option<string>;
   eventUrl: Option<string>;
