@@ -33,10 +33,6 @@ async function createServer(): Promise<void> {
       },
       servers: [
         {
-          url: "http://localhost:3000",
-          description: "Development server",
-        },
-        {
           url: "https://api.tapped.ai",
           description: "Production server",
         },
