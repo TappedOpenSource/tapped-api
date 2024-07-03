@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { getUserById } from "../data/database";
 import { queryUsers } from "../data/search";
 import { UserModel } from "../types/user_model";
+import { normalizeRecord } from "../utils/normalize";
 
 export async function getLocationController(
   request: FastifyRequest,
@@ -57,9 +58,11 @@ export async function getLocationController(
       {} as Record<string, number>,
     );
 
+  const normalizedGenres = normalizeRecord(genres);
+
   reply.send({
     venues,
     topPerformers,
-    genres,
+    genres: normalizedGenres,
   });
 }

@@ -338,7 +338,9 @@ async function createServer(): Promise<void> {
               type: "array",
               items: { type: "object", $ref: "performerSchema#" },
             },
-            genres: { type: "array", items: { type: "string" } },
+            genres: {
+              type: "object",
+            },
           },
         },
       },
