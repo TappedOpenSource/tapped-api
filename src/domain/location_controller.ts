@@ -30,9 +30,10 @@ export async function getLocationController(
     occupations: ["venue", "Venue"],
     lat: latNum,
     lng: lngNum,
-    radius: 100,
+    radius: 100_000,
     hitsPerPage: 250,
   });
+  request.log.info(`found ${venues.length} venues`);
 
   // get top performers at those venues
   const topPerformers = (await Promise.all(
@@ -46,6 +47,7 @@ export async function getLocationController(
         return performer !== null;
       }),
   )) as UserModel[];
+  request.log.info(`found ${topPerformers.length} performers`);
 
   // get top genres at those venues
   const genres = venues
