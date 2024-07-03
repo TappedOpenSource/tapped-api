@@ -11,7 +11,7 @@ export type Booking = {
   requesteeId: string;
   status: "pending" | "confirmed" | "canceled";
   rate: number;
-  location: Location;
+  location?: Location;
   startTime: Timestamp;
   endTime: Timestamp;
   timestamp: Date;
@@ -31,7 +31,7 @@ export type GuardedBooking = {
   location: {
     lat: number;
     lng: number;
-  };
+  } | null;
   startTime: string;
   endTime: string;
   flierUrl: Option<string>;

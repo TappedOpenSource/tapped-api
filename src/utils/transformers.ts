@@ -52,6 +52,13 @@ export function transformUser({
 }
 
 export function transformBooking(booking: Booking): GuardedBooking {
+  const bookingLocation =
+    booking.location !== undefined
+      ? {
+        lat: booking.location.lat,
+        lng: booking.location.lng,
+      }
+      : null;
   return {
     id: booking.id,
     title: booking.name,
@@ -59,10 +66,7 @@ export function transformBooking(booking: Booking): GuardedBooking {
     bookerId: booking.requesterId ?? null,
     performerId: booking.requesteeId,
     rate: booking.rate,
-    location: {
-      lat: booking.location.lat,
-      lng: booking.location.lng,
-    },
+    location: bookingLocation,
     startTime: booking.startTime.toDate().toISOString(),
     endTime: booking.endTime.toDate().toISOString(),
     flierUrl: booking.flierUrl,
