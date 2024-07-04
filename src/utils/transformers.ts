@@ -45,8 +45,10 @@ export function transformPerformer({
     reviews: {
       count: reviews.length,
       rating:
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length,
+        reviews.length <= 0
+          ? 0
+          : reviews.reduce((acc, review) => acc + review.rating, 0) /
+            reviews.length,
       items: reviews,
     },
   };
@@ -74,8 +76,10 @@ export function transformVenue({
     reviews: {
       count: reviews.length,
       rating:
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length,
+        reviews.length <= 0
+          ? 0
+          : reviews.reduce((acc, review) => acc + review.rating, 0) /
+            reviews.length,
       items: reviews,
     },
   };
