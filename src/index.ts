@@ -247,11 +247,12 @@ async function createServer(): Promise<void> {
       lights: { type: "string" },
       topPerformerIds: { type: "array", items: { type: "string" } },
       bookings: {
-        type: "array",
-        items: {
+        type: "object",
+        properties: {
           type: "object",
           properties: {
             count: { type: "number" },
+            rating: { type: "number" },
             items: { type: "array", items: { $ref: "bookingSchema#" } },
           },
         },
