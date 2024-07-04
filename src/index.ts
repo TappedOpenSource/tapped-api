@@ -201,11 +201,8 @@ async function createServer(): Promise<void> {
       bookings: {
         type: "object",
         properties: {
-          type: "object",
-          properties: {
-            count: { type: "number" },
-            items: { type: "array", items: { $ref: "bookingSchema#" } },
-          },
+          count: { type: "number" },
+          items: { type: "array", items: { $ref: "bookingSchema#" } },
         },
       },
       reviews: {
@@ -248,11 +245,8 @@ async function createServer(): Promise<void> {
       bookings: {
         type: "object",
         properties: {
-          type: "object",
-          properties: {
-            count: { type: "number" },
-            items: { type: "array", items: { $ref: "bookingSchema#" } },
-          },
+          count: { type: "number" },
+          items: { type: "array", items: { $ref: "bookingSchema#" } },
         },
       },
       reviews: {
