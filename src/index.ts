@@ -332,7 +332,7 @@ async function createServer(): Promise<void> {
           properties: {
             venues: {
               type: "array",
-              items: { type: "object", $ref: "venueSchema" },
+              items: { type: "object", $ref: "venueSchema#" },
             },
             topPerformers: {
               type: "array",
