@@ -204,7 +204,6 @@ async function createServer(): Promise<void> {
           type: "object",
           properties: {
             count: { type: "number" },
-            rating: { type: "number" },
             items: { type: "array", items: { $ref: "bookingSchema#" } },
           },
         },
@@ -252,7 +251,6 @@ async function createServer(): Promise<void> {
           type: "object",
           properties: {
             count: { type: "number" },
-            rating: { type: "number" },
             items: { type: "array", items: { $ref: "bookingSchema#" } },
           },
         },
