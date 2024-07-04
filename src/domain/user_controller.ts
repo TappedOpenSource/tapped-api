@@ -8,7 +8,7 @@ import {
 import {
   transformBooking,
   transformReview,
-  transformUser,
+  transformPerformer,
 } from "../utils/transformers";
 
 export async function getUserController(
@@ -35,7 +35,7 @@ export async function getUserController(
   const bookings = await getBookingsByRequesteeId(user.id);
   const reviews = await getPerformerReviewsByUserId(user.id);
 
-  const guardedUser = transformUser({
+  const guardedUser = transformPerformer({
     user,
     bookings: bookings.map(transformBooking),
     reviews: reviews.map(transformReview),
@@ -70,7 +70,7 @@ export async function getUsernameController(
   const bookings = await getBookingsByRequesteeId(user.id);
   const reviews = await getPerformerReviewsByUserId(user.id);
 
-  const guardedUser = transformUser({
+  const guardedUser = transformPerformer({
     user,
     bookings: bookings.map(transformBooking),
     reviews: reviews.map(transformReview),

@@ -1,6 +1,7 @@
 import { Booking, GuardedBooking } from "../types/booking";
 import { GuardedReview, Review } from "../types/review";
 import {
+  GuardedVenue,
   GuardedPerformer,
   ticketPriceRange,
   userAudienceSize,
@@ -13,7 +14,7 @@ type TranformParams = {
   reviews: GuardedReview[];
 };
 
-export function transformUser({
+export function transformPerformer({
   user,
   bookings,
   reviews,
@@ -37,6 +38,35 @@ export function transformUser({
       max: userTicketRange[1],
     },
     ...user.performerInfo,
+    bookings: {
+      count: bookings.length,
+      items: bookings,
+    },
+    reviews: {
+      count: reviews.length,
+      rating:
+        reviews.reduce((acc, review) => acc + review.rating, 0) /
+        reviews.length,
+      items: reviews,
+    },
+  };
+}
+
+export function transformVenue({
+  user,
+  bookings,
+  reviews,
+}: TranformParams): GuardedVenue {
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.artistName,
+    profilePictureUrl: user.profilePicture,
+    bio: user.bio,
+    location: user.location,
+    ...user.venueInfo,
+    genres: user.venueInfo?.genres ?? [],
+    topPerformerIds: user.venueInfo?.topPerformerIds ?? [],
     bookings: {
       count: bookings.length,
       items: bookings,

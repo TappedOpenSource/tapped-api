@@ -1,8 +1,17 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { getUserById } from "../data/database";
+import {
+  getBookerReviewsByUserId,
+  getBookingsByRequesterId,
+  getUserById,
+} from "../data/database";
 import { queryUsers } from "../data/search";
 import { UserModel } from "../types/user_model";
 import { normalizeRecord } from "../utils/normalize";
+import {
+  transformBooking,
+  transformReview,
+  transformVenue,
+} from "../utils/transformers";
 
 export async function getLocationController(
   request: FastifyRequest,
@@ -35,10 +44,22 @@ export async function getLocationController(
   });
   request.log.info(`found ${venues.length} venues`);
 
+  const guardedVenues = await Promise.all(
+    venues.map(async (v) => {
+      const bookings = await getBookingsByRequesterId(v.id);
+      const reviews = await getBookerReviewsByUserId(v.id);
+      return transformVenue({
+        user: v,
+        bookings: bookings.map(transformBooking),
+        reviews: reviews.map(transformReview),
+      });
+    }),
+  );
+
   // get top performers at those venues
   const topPerformers = (await Promise.all(
-    venues
-      .flatMap((venue) => venue.venueInfo?.topPerformerIds ?? [])
+    guardedVenues
+      .flatMap((venue) => venue.topPerformerIds)
       .map(async (performerId) => {
         const performer = await getUserById(performerId);
         return performer;
@@ -50,8 +71,8 @@ export async function getLocationController(
   request.log.info(`found ${topPerformers.length} performers`);
 
   // get top genres at those venues
-  const genres = venues
-    .flatMap((venue) => venue.venueInfo?.genres ?? [])
+  const genres = guardedVenues
+    .flatMap((venue) => venue.genres ?? [])
     .reduce(
       (acc, genre) => {
         acc[genre] = (acc[genre] ?? 0) + 1;
@@ -63,7 +84,7 @@ export async function getLocationController(
   const normalizedGenres = normalizeRecord(genres);
 
   reply.send({
-    venues,
+    venues: guardedVenues,
     topPerformers,
     genres: normalizedGenres,
   });

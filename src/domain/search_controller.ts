@@ -8,7 +8,7 @@ import { GuardedPerformer } from "../types/user_model";
 import {
   transformBooking,
   transformReview,
-  transformUser,
+  transformPerformer,
 } from "../utils/transformers";
 
 export async function searchPerformersController(
@@ -32,7 +32,7 @@ export async function searchPerformersController(
         const bookings = await getBookingsByRequesteeId(user.id);
         const reviews = await getPerformerReviewsByUserId(user.id);
 
-        return transformUser({
+        return transformPerformer({
           user,
           bookings: bookings.map(transformBooking),
           reviews: reviews.map(transformReview),

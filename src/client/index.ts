@@ -15,7 +15,7 @@ import { queryUsers } from "../data/search";
 import {
   transformBooking,
   transformReview,
-  transformUser,
+  transformPerformer,
 } from "../utils/transformers";
 
 program.name("tapped-api-client").description("CLI client for Tapped API");
@@ -36,7 +36,7 @@ program
 
     const bookings = await getBookingsByRequesteeId(user.id);
     const reviews = await getPerformerReviewsByUserId(user.id);
-    const guardedUser = transformUser({
+    const guardedUser = transformPerformer({
       user,
       bookings: bookings.map(transformBooking),
       reviews: reviews.map(transformReview),
@@ -57,7 +57,7 @@ program
       hits.map(async (hit) => {
         const bookings = await getBookingsByRequesteeId(hit.id);
         const reviews = await getPerformerReviewsByUserId(hit.id);
-        const guardedUser = transformUser({
+        const guardedUser = transformPerformer({
           user: hit,
           bookings: bookings.map(transformBooking),
           reviews: reviews.map(transformReview),

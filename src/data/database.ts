@@ -126,3 +126,18 @@ export async function getPerformerReviewsByUserId(
 
   return reviewQuery.docs.map((doc) => doc.data() as Review);
 }
+
+export async function getBookerReviewsByUserId(
+  userId: string,
+): Promise<Review[]> {
+  const reviewQuery = await reviewsRef
+    .where("bookerId", "==", userId)
+    .where("type", "==", "booker")
+    .get();
+
+  if (reviewQuery.empty) {
+    return [];
+  }
+
+  return reviewQuery.docs.map((doc) => doc.data() as Review);
+}
