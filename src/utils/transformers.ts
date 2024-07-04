@@ -91,18 +91,18 @@ export function transformBooking(booking: Booking): GuardedBooking {
       : null;
   return {
     id: booking.id,
-    title: booking.name,
-    description: booking.note,
+    title: booking.name ?? "",
+    description: booking.note ?? "",
     bookerId: booking.requesterId ?? null,
-    performerId: booking.requesteeId,
-    rate: booking.rate,
+    performerId: booking.requesteeId ?? null,
+    rate: booking.rate ?? 0,
     location: bookingLocation,
     startTime: booking.startTime.toDate().toISOString(),
     endTime: booking.endTime.toDate().toISOString(),
-    flierUrl: booking.flierUrl,
-    eventUrl: booking.eventUrl,
-    venueId: booking.venueId,
-    referenceEventId: booking.referenceEventId,
+    flierUrl: booking.flierUrl ?? null,
+    eventUrl: booking.eventUrl ?? null,
+    venueId: booking.venueId ?? null,
+    referenceEventId: booking.referenceEventId ?? null,
   };
 }
 
