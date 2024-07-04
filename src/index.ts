@@ -123,6 +123,7 @@ async function createServer(): Promise<void> {
       endTime: { type: "string", format: "date-time" },
       flierUrl: { type: "string" },
       eventUrl: { type: "string" },
+      venueId: { type: "string" },
       referenceEventId: { type: "string" },
     },
   });
